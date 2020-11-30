@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeyu.demo.mapper.GukeMapper">
+
+    <!--    调用存储过程-->
+    <update id="cal" parameterType="map" statementType="CALLABLE">
+        {call test(
+            #{dianhua},
+            #{id},
+            #{times}
+        )}
+    </update>
+    <!-- 根据id查询；返回单个对象 -->
+    <select id="getGukeById" resultType="com.zeyu.demo.pojo.Guke">
+        select
+        id as id,
+        name as name,
+        dianhua as dianhua,
+        mima as mima,
+        dizhi as dizhi,
+        yue as yue
+        from guke
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <!-- 根据条件查询；返回多个对象-->
+    <select id="getGukeListByMap" resultType="com.zeyu.demo.pojo.Guke"
+            parameterType="java.util.Map">
+        select
+        id as id,
+        name as name,
+        dianhua as dianhua,
+        mima as mima,
+        dizhi as dizhi,
+        yue as yue
+        from guke
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="name != null">
+                and name=#{name}
+            </if>
+            <if test="dianhua != null">
+                and dianhua=#{dianhua}
+            </if>
+            <if test="mima != null">
+                and mima=#{mima}
+            </if>
+            <if test="dizhi != null">
+                and dizhi=#{dizhi}
+            </if>
+        </trim>
+        order by id desc
+    </select>
+
+
+    <!--  查询数量：根据传入的条件查询目标数量；返回查询的数量 -->
+    <select id="getGukeCountByMap" resultType="integer" parameterType="java.util.Map">
+        select count(*) from guke
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="name != null">
+                and name=#{name}
+            </if>
+            <if test="dianhua != null">
+                and dianhua=#{dianhua}
+            </if>
+            <if test="mima != null">
+                and mima=#{mima}
+            </if>
+            <if test="dizhi != null">
+                and dizhi=#{dizhi}
+            </if>
+            <if test="yue != null">
+                and yue=#{yue}
+            </if>
+        </trim>
+    </select>
+
+    <!--  添加：根据传入的参数添加信息；返回影响的行数 -->
+    <insert id="insertGuke" parameterType="com.zeyu.demo.pojo.Guke"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into guke(
+                    name,
+                    dianhua,
+                    mima,
+                    dizhi,
+                    yue)
+        values(
+                    #{name},
+                    #{dianhua},
+                    #{mima},
+                    #{dizhi},
+                    #{yue})
+    </insert>
+
+
+    <insert id="insertGukeList" parameterType="list" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into guke(
+        name,
+        dianhua,
+        mima,
+        dizhi,
+        yue)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.name},
+            #{item.dianhua},
+            #{item.mima},
+            #{item.dizhi},
+            #{item.yue})
+        </foreach>
+    </insert>
+
+    <!--  根据id修改：根据传入的参数修改对应的数据库类；返回影响的行数-->
+    <update id="updateGuke" parameterType="com.zeyu.demo.pojo.Guke">
+        update guke
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="dianhua != null">
+                dianhua=#{dianhua},
+            </if>
+            <if test="mima != null">
+                mima=#{mima},
+            </if>
+            <if test="dizhi != null">
+                dizhi=#{dizhi},
+            </if>
+            <if test="yue != null">
+                yue=#{yue}
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--  删除： 根据map删除对象；返回影响的行数-->
+    <delete id="deleteGukeByMap" parameterType="java.util.Map">
+        delete from guke
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="name != null">
+                and name=#{name}
+            </if>
+            <if test="dianhua != null">
+                and dianhua=#{dianhua}
+            </if>
+            <if test="mima != null">
+                and mima=#{mima}
+            </if>
+            <if test="dizhi != null">
+                and dizhi=#{dizhi}
+            </if>
+        </trim>
+    </delete>
+</mapper>
